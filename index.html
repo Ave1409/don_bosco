@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Petal Safe</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ffe6f0, #fcd3e1);
+      transition: background-color 0.3s ease;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 28px;
+      background-color: #fff0f6;
+      border-bottom: 1px solid #ffd6e7;
+      background-image: url('https://www.transparenttextures.com/patterns/flowers.png');
+    }
+    .logo-title {
+      display: flex;
+      align-items: center;
+    }
+    .logo-title img {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+    .logo-title span {
+      font-size: 24px;
+      font-weight: bold;
+      color: #d63384;
+    }
+    .nav-links a {
+      margin-left: 20px;
+      text-decoration: none;
+      font-size: 20px;
+      color: #d63384;
+      font-weight: bold;
+    }
+    .nav-links a:hover {
+      color: #ad1457;
+    }
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: calc(100vh - 64px);
+    }
+    .circle-button {
+      width: 50vh;
+      height: 50vh;
+      border-radius: 50%;
+      background-color: #ff69b4;
+      color: white;
+      font-size: 60px;
+      border: 5px dashed white;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      background-image: url('https://www.transparenttextures.com/patterns/flower-pattern.png');
+    }
+    .circle-button:hover {
+      background-color: #ff1493;
+    }
+    .abort-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      background-color: #d63384;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .abort-button:hover {
+      background-color: #ad1457;
+    }
+    .send-help-button {
+      margin-top: 20px;
+      padding: 24px 48px;
+      border-radius: 999px;
+      background-color: #d63384;
+      color: white;
+      border: none;
+      font-size: 32px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .send-help-button:hover {
+      background-color: #ad1457;
+      transform: scale(1.05);
+    }
+    .flower-banner {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 100px;
+      background-image: url('https://www.transparenttextures.com/patterns/flowertrail.png');
+      background-size: cover;
+      opacity: 0.3;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo-title">
+      <img src="logo.png" alt="Logo" />
+      <span>Petals</span>
+    </div>
+    <div class="nav-links">
+      <a href="/register.html">Register</a>
+      <a href="/login.html">Login</a>
+      <a href="/dashboard.html">Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="center">
+    <button id="rescueButton" class="circle-button">💮</button>
+    <button id="abortButton" class="abort-button" style="display:none;">Abort</button>
+    <button id="helpButton" class="send-help-button" style="display:none;">Send Help</button>
+  </div>
+
+  <div class="flower-banner"></div>
+
+  <script>
+    const rescueButton = document.getElementById("rescueButton");
+    const abortButton = document.getElementById("abortButton");
+    const helpButton = document.getElementById("helpButton");
+
+    let recorder;
+    let audioStream;
+    let dangerState = { highest_audio: "Low", dispatch: false };
+
+    rescueButton.addEventListener("click", async () => {
+      document.body.style.background = "#ffe4ec";
+      rescueButton.style.display = "none";
+      abortButton.style.display = "inline-block";
+      helpButton.style.display = "none";
+
+      fetch("/api/send-rescue", { method: "POST" }).catch(() => {});
+
+      try {
+        audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioContext.createMediaStreamSource(audioStream);
+        const analyser = audioContext.createAnalyser();
+        source.connect(analyser);
+        analyser.fftSize = 512;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        function checkVolume() {
+          analyser.getByteFrequencyData(dataArray);
+          const maxVal = Math.max(...dataArray);
+
+          if (!window.helpButtonTimer) window.helpButtonTimer = null;
+          if (!window.helpButtonActive) window.helpButtonActive = false;
+
+          if (maxVal > 229 && !window.helpButtonActive) {
+            window.helpButtonActive = true;
+            helpButton.style.display = "inline-block";
+            document.body.style.background = "#ffcccc";
+            if (window.helpButtonTimer) clearTimeout(window.helpButtonTimer);
+            window.helpButtonTimer = setTimeout(() => {
+              helpButton.style.display = "none";
+              document.body.style.background = "#ffe6f0";
+              window.helpButtonActive = false;
+              window.helpButtonTimer = null;
+            }, 10000);
+          }
+
+          // Only update UI if not in the 10s alert state
+          if (!window.helpButtonActive) {
+            if (maxVal > 100) {
+              document.body.style.background = "#ffe6e6";
+              helpButton.style.display = "none";
+            } else {
+              document.body.style.background = "#fff0f6";
+              helpButton.style.display = "none";
+            }
+          }
+
+          requestAnimationFrame(checkVolume);
+        }
+
+        checkVolume();
+
+        recorder = new MediaRecorder(audioStream);
+        const chunks = [];
+        recorder.ondataavailable = e => chunks.push(e.data);
+        recorder.onstop = async () => {
+          const blob = new Blob(chunks, { type: "audio/webm" });
+          const formData = new FormData();
+          formData.append("audio", blob);
+          fetch("/api/upload-audio", {
+            method: "POST",
+            body: formData
+          }).catch(() => {});
+        };
+        recorder.start();
+      } catch (err) {
+        console.error("Mic error:", err);
+        alert("Microphone access denied.");
+      }
+    });
+
+    abortButton.addEventListener("click", async () => {
+      document.body.style.background = "linear-gradient(135deg, #ffe6f0, #fcd3e1)";
+      rescueButton.style.display = "inline-block";
+      abortButton.style.display = "none";
+      helpButton.style.display = "none";
+
+      fetch("/api/send-safe", { method: "POST" }).catch(() => {});
+
+      if (recorder && recorder.state === "recording") {
+        recorder.stop();
+      }
+      if (audioStream) {
+        audioStream.getTracks().forEach(track => track.stop());
+      }
+    });
+
+    helpButton.addEventListener("click", async () => {
+      fetch("/api/send-help", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: "Help button manually triggered due to high volume." })
+      }).catch(() => {});
+      helpButton.innerText = "Help Sent!";
+      helpButton.disabled = true;
+    });
+  </script>
+</body>
+</html>
