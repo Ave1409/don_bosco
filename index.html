@@ -16,11 +16,17 @@
       background-position: center;
       min-height: 100vh;
       /* Subtle fade-in */
-      animation: fadeInBody 1.2s cubic-bezier(.4,2,.6,1);
+      animation: fadeInBody 1.2s cubic-bezier(.4, 2, .6, 1);
     }
+
     @keyframes fadeInBody {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     nav {
@@ -36,6 +42,7 @@
       border-radius: 0 0 24px 24px;
       transition: background 0.4s, box-shadow 0.4s;
     }
+
     nav:hover {
       background: rgba(255, 240, 246, 0.95);
       box-shadow: 0 12px 40px rgba(214, 51, 132, 0.13);
@@ -53,9 +60,11 @@
       filter: drop-shadow(0 2px 8px #ffd6e7);
       transition: transform 0.3s;
     }
+
     .logo-title img:hover {
       transform: scale(1.12) rotate(-8deg);
     }
+
     .logo-title span {
       font-size: 28px;
       font-weight: bold;
@@ -64,6 +73,7 @@
       text-shadow: 0 2px 8px #ffd6e7;
       transition: color 0.3s;
     }
+
     .logo-title span:hover {
       color: #ad1457;
     }
@@ -78,6 +88,7 @@
       border-radius: 8px;
       transition: background 0.3s, color 0.3s, box-shadow 0.3s;
     }
+
     .nav-links a:hover {
       color: #fff;
       background: linear-gradient(90deg, #ffb6d5 0%, #d63384 100%);
@@ -90,12 +101,10 @@
       align-items: center;
       justify-content: center;
       height: calc(100vh - 64px);
-      animation: fadeInCenter 1.2s 0.2s cubic-bezier(.4,2,.6,1) backwards;
-    }
-    @keyframes fadeInCenter {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: none; }
-    }
+      animation: fadeInCenter 1.2s 0.2s cubic-bezier(.4, 2, .6, 1) backwards;
+      position: relative;
+      
+    }  
 
     .circle-button {
       width: 50vh;
@@ -112,12 +121,106 @@
       overflow: hidden;
       transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
       backdrop-filter: blur(2px);
-      background: rgba(255,255,255,0.12);
+      background: rgba(255, 255, 255, 0.12);
+      left: 55px;   
+      position: relative;
     }
+
     .circle-button:hover {
       border-color: #ff1493;
       box-shadow: 0 12px 40px #ffd6e7;
       transform: scale(1.04) rotate(-2deg);
+    }
+
+    .side-panels {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100vh;
+      height: 100vh;
+      transform: translate(-50%, -50%);
+      /* pointer-events: auto; not needed here, let children handle it */
+    }
+    .side-panels {
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.panel-icon.radial {
+  z-index: 1;
+}
+
+.panel-icon.radial:hover {
+  z-index: 999; /* bring to front */
+}
+
+    .panel-icon {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      color: #d63384;
+      font-size: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(214, 51, 132, 0.15);
+      transition: transform 0.3s, background 0.3s, box-shadow 0.3s, filter 0.3s;
+      pointer-events: auto;
+      backdrop-filter: blur(4px);
+      animation: fadeInPanel 1.2s ease;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .panel-icon.radial {
+  transform-origin: center;
+}
+.panel-icon.radial {
+  transform: rotate(calc(36deg * var(--i))) translate(35vh) rotate(calc(-36deg * var(--i)));
+}
+
+.panel-icon.radial:hover {
+  transform: rotate(calc(36deg * var(--i))) translate(35vh) rotate(calc(-36deg * var(--i))) scale(1.12);
+}
+
+    @keyframes fadeInPanel {
+      from {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  .panel-icon div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .panel-icon span {
+      font-size: 14px;
+      font-weight: 600;
+      color: #c83282;
+      margin-top: 6px;
+    }
+
+
+
+    /* Radial positioning - use a separate class so transform can be composed with hover */
+    .panel-icon {
+      /* ...existing styles... */
+      top: 50%;
+      left: 50%;
+    }
+    .panel-icon.radial {
+      transform: rotate(calc(36deg * var(--i))) translate(35vh) rotate(calc(-36deg * var(--i)));
     }
 
     .circle-img {
@@ -129,6 +232,7 @@
       filter: drop-shadow(0 2px 12px #ffd6e7);
       transition: filter 0.3s, transform 0.3s;
     }
+
     .circle-button:hover .circle-img {
       filter: drop-shadow(0 4px 24px #ffb6d5);
       transform: scale(1.06);
@@ -148,6 +252,7 @@
       letter-spacing: 1px;
       transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
     }
+
     .abort-button:hover {
       background: linear-gradient(90deg, #ad1457 0%, #ffb6d5 100%);
       box-shadow: 0 4px 24px #ffb6d5;
@@ -168,18 +273,21 @@
       letter-spacing: 1px;
       transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
     }
+
     .send-help-button:hover {
       background: linear-gradient(90deg, #ad1457 0%, #ffb6d5 100%);
       box-shadow: 0 4px 24px #ffb6d5;
       transform: scale(1.07) rotate(-2deg);
     }
+
+    
   </style>
 </head>
 
 <body>
   <nav>
     <div class="logo-title">
-      <img src="logo.png" alt="Logo" />
+      <img src="logo.jpg" alt="Logo" />
       <span>Petals</span>
     </div>
     <div class="nav-links">
@@ -189,6 +297,41 @@
     </div>
   </nav>
 
+  <div class="side-panels">
+    <a href="https://example.com/period-tracker" class="panel-icon radial" style="--i: 0;">
+      <div>🩸<span>Periods</span></div>
+    </a>
+    <a href="https://example.com/grocery-list" class="panel-icon radial" style="--i: 1;">
+      <div>🛒<span>Groceries</span></div>
+    </a>
+    <a href="https://example.com/birthday" class="panel-icon radial" style="--i: 2;">
+      <div>🎂<span>Birthdays</span></div>
+    </a>
+    <a href="https://example.com/skincare" class="panel-icon radial" style="--i: 3;">
+      <div>🧴<span>Skincare</span></div>
+    </a>
+    <a href="https://example.com/workout" class="panel-icon radial" style="--i: 4;">
+      <div>💪<span>Workout</span></div>
+    </a>
+    <a href="https://example.com/meditation" class="panel-icon radial" style="--i: 5;">
+      <div>🧘‍♀<span>Meditation</span></div>
+    </a>
+    <a href="https://example.com/journal" class="panel-icon radial" style="--i: 6;">
+      <div>📔<span>Journal</span></div>
+    </a>
+    <a href="https://example.com/makeup" class="panel-icon radial" style="--i: 7;">
+      <div>💄<span>Makeup</span></div>
+    </a>
+    <a href="https://example.com/fashion" class="panel-icon radial" style="--i: 8;">
+      <div>👗<span>Fashion</span></div>
+    </a>
+    <a href="https://example.com/recipes" class="panel-icon radial" style="--i: 9;">
+      <div>🥗<span>Recipes</span></div>
+    </a>
+  </div>
+
+
+
   <div class="center">
     <button id="rescueButton" class="circle-button">
       <img src="button.png" alt="Rescue" class="circle-img" />
@@ -197,7 +340,7 @@
     <button id="helpButton" class="send-help-button" style="display:none;">Send Help</button>
   </div>
 
-  
+
 
   <script>
     const rescueButton = document.getElementById("rescueButton");
@@ -213,6 +356,7 @@
       rescueButton.style.display = "none";
       abortButton.style.display = "inline-block";
       helpButton.style.display = "none";
+      document.querySelector('.side-panels').style.display = 'none';
 
       fetch("/api/send-rescue", { method: "POST" }).catch(() => { });
 
@@ -287,6 +431,7 @@
       rescueButton.style.display = "inline-block";
       abortButton.style.display = "none";
       helpButton.style.display = "none";
+      document.querySelector('.side-panels').style.display = '';
 
       fetch("/api/send-safe", { method: "POST" }).catch(() => { });
 
@@ -304,7 +449,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: "Help button manually triggered due to high volume." })
       }).catch(() => { });
-      helpButton.innerText = "Help Sent!";
+      helpButton.innerText = "Admin informed about distress";
       helpButton.disabled = true;
     });
   </script>
