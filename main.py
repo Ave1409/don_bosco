@@ -94,7 +94,7 @@ def handle_rescue_event(json):
     print('received rescue event: ' + str(json))
     # add your logic here
 
-@socketio.on('auto-dispatch')
+@socketio.on('auto_dispatch')
 def handle_auto_dispatch(json):
     print('received auto-dispatch event: ' + str(json))
     # add your logic here

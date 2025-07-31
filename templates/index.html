@@ -137,7 +137,7 @@
     // User authentication/session ID from your backend; this must be set securely!
     const USER_ID_FROM_APP = "{{ user_id|safe }}"; 
 
-    let socket = null;
+    let socket;
     let mediaRecorder = null;
     let audioStream = null;
     let animationFrameId = null;
