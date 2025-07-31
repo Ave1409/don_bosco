@@ -1,112 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Petal Safe</title>
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #ffe6f0, #fcd3e1);
-      transition: background-color 0.3s ease;
+      background-image: url('https://media.istockphoto.com/id/1382596550/vector/abstract-art-pink-floral-background-hand-draw-outline-flowers-magnolia-sketch-with-leaves.jpg?s=612x612&w=0&k=20&c=d4TLUvB16PCF1afgwPsDhcZFKtuZ3VAFKkvzpNchP5c=');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center;
+      min-height: 100vh;
+      /* Subtle fade-in */
+      animation: fadeInBody 1.2s cubic-bezier(.4,2,.6,1);
     }
+    @keyframes fadeInBody {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 16px 28px;
-      background-color: #fff0f6;
+      background: rgba(255, 240, 246, 0.85);
       border-bottom: 1px solid #ffd6e7;
       background-image: url('https://www.transparenttextures.com/patterns/flowers.png');
+      box-shadow: 0 8px 32px rgba(214, 51, 132, 0.08);
+      backdrop-filter: blur(8px);
+      border-radius: 0 0 24px 24px;
+      transition: background 0.4s, box-shadow 0.4s;
     }
+    nav:hover {
+      background: rgba(255, 240, 246, 0.95);
+      box-shadow: 0 12px 40px rgba(214, 51, 132, 0.13);
+    }
+
     .logo-title {
       display: flex;
       align-items: center;
     }
+
     .logo-title img {
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
+      width: 48px;
+      height: 48px;
+      margin-right: 14px;
+      filter: drop-shadow(0 2px 8px #ffd6e7);
+      transition: transform 0.3s;
+    }
+    .logo-title img:hover {
+      transform: scale(1.12) rotate(-8deg);
     }
     .logo-title span {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
       color: #d63384;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 8px #ffd6e7;
+      transition: color 0.3s;
     }
-    .nav-links a {
-      margin-left: 20px;
-      text-decoration: none;
-      font-size: 20px;
-      color: #d63384;
-      font-weight: bold;
-    }
-    .nav-links a:hover {
+    .logo-title span:hover {
       color: #ad1457;
     }
+
+    .nav-links a {
+      margin-left: 24px;
+      text-decoration: none;
+      font-size: 22px;
+      color: #d63384;
+      font-weight: bold;
+      padding: 8px 18px;
+      border-radius: 8px;
+      transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+    .nav-links a:hover {
+      color: #fff;
+      background: linear-gradient(90deg, #ffb6d5 0%, #d63384 100%);
+      box-shadow: 0 2px 12px #ffd6e7;
+    }
+
     .center {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: calc(100vh - 64px);
+      animation: fadeInCenter 1.2s 0.2s cubic-bezier(.4,2,.6,1) backwards;
     }
+    @keyframes fadeInCenter {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: none; }
+    }
+
     .circle-button {
       width: 50vh;
       height: 50vh;
       border-radius: 50%;
-      background-color: #ff69b4;
-      color: white;
-      font-size: 60px;
-      border: 5px dashed white;
+      background: none;
+      border: 5px dashed #ff69b4;
+      padding: 0;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      background-image: url('https://www.transparenttextures.com/patterns/flower-pattern.png');
+      box-shadow: 0 8px 32px rgba(214, 51, 132, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+      backdrop-filter: blur(2px);
+      background: rgba(255,255,255,0.12);
     }
     .circle-button:hover {
-      background-color: #ff1493;
+      border-color: #ff1493;
+      box-shadow: 0 12px 40px #ffd6e7;
+      transform: scale(1.04) rotate(-2deg);
     }
+
+    .circle-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+      filter: drop-shadow(0 2px 12px #ffd6e7);
+      transition: filter 0.3s, transform 0.3s;
+    }
+    .circle-button:hover .circle-img {
+      filter: drop-shadow(0 4px 24px #ffb6d5);
+      transform: scale(1.06);
+    }
+
     .abort-button {
       margin-top: 20px;
-      padding: 10px 20px;
+      padding: 12px 28px;
       border-radius: 999px;
-      background-color: #d63384;
+      background: linear-gradient(90deg, #d63384 0%, #ffb6d5 100%);
       color: white;
       border: none;
-      font-size: 16px;
+      font-size: 18px;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 12px #ffd6e7;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
     }
     .abort-button:hover {
-      background-color: #ad1457;
+      background: linear-gradient(90deg, #ad1457 0%, #ffb6d5 100%);
+      box-shadow: 0 4px 24px #ffb6d5;
+      transform: scale(1.05);
     }
+
     .send-help-button {
       margin-top: 20px;
       padding: 24px 48px;
       border-radius: 999px;
-      background-color: #d63384;
+      background: linear-gradient(90deg, #d63384 0%, #ffb6d5 100%);
       color: white;
       border: none;
       font-size: 32px;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 2px 12px #ffd6e7;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
     }
     .send-help-button:hover {
-      background-color: #ad1457;
-      transform: scale(1.05);
-    }
-    .flower-banner {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 100px;
-      background-image: url('https://www.transparenttextures.com/patterns/flowertrail.png');
-      background-size: cover;
-      opacity: 0.3;
+      background: linear-gradient(90deg, #ad1457 0%, #ffb6d5 100%);
+      box-shadow: 0 4px 24px #ffb6d5;
+      transform: scale(1.07) rotate(-2deg);
     }
   </style>
 </head>
+
 <body>
   <nav>
     <div class="logo-title">
@@ -116,17 +185,19 @@
     <div class="nav-links">
       <a href="/register.html">Register</a>
       <a href="/login.html">Login</a>
-      <a href="/dashboard.html">Dashboard</a>
+      <a href="/user-dashboard.html">Dashboard</a>
     </div>
   </nav>
 
   <div class="center">
-    <button id="rescueButton" class="circle-button">💮</button>
+    <button id="rescueButton" class="circle-button">
+      <img src="button.png" alt="Rescue" class="circle-img" />
+    </button>
     <button id="abortButton" class="abort-button" style="display:none;">Abort</button>
     <button id="helpButton" class="send-help-button" style="display:none;">Send Help</button>
   </div>
 
-  <div class="flower-banner"></div>
+  
 
   <script>
     const rescueButton = document.getElementById("rescueButton");
@@ -138,12 +209,12 @@
     let dangerState = { highest_audio: "Low", dispatch: false };
 
     rescueButton.addEventListener("click", async () => {
-      document.body.style.background = "#ffe4ec";
+      document.body.style.backgroundColor = "#ffe4ec";
       rescueButton.style.display = "none";
       abortButton.style.display = "inline-block";
       helpButton.style.display = "none";
 
-      fetch("/api/send-rescue", { method: "POST" }).catch(() => {});
+      fetch("/api/send-rescue", { method: "POST" }).catch(() => { });
 
       try {
         audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -166,11 +237,11 @@
           if (maxVal > 229 && !window.helpButtonActive) {
             window.helpButtonActive = true;
             helpButton.style.display = "inline-block";
-            document.body.style.background = "#ffcccc";
+            document.body.style.backgroundColor = "#ffcccc";
             if (window.helpButtonTimer) clearTimeout(window.helpButtonTimer);
             window.helpButtonTimer = setTimeout(() => {
               helpButton.style.display = "none";
-              document.body.style.background = "#ffe6f0";
+              document.body.style.backgroundColor = "";
               window.helpButtonActive = false;
               window.helpButtonTimer = null;
             }, 10000);
@@ -179,10 +250,10 @@
           // Only update UI if not in the 10s alert state
           if (!window.helpButtonActive) {
             if (maxVal > 100) {
-              document.body.style.background = "#ffe6e6";
+              document.body.style.backgroundColor = "#ffe6e6";
               helpButton.style.display = "none";
             } else {
-              document.body.style.background = "#fff0f6";
+              document.body.style.backgroundColor = "#fff0f6";
               helpButton.style.display = "none";
             }
           }
@@ -202,7 +273,7 @@
           fetch("/api/upload-audio", {
             method: "POST",
             body: formData
-          }).catch(() => {});
+          }).catch(() => { });
         };
         recorder.start();
       } catch (err) {
@@ -212,12 +283,12 @@
     });
 
     abortButton.addEventListener("click", async () => {
-      document.body.style.background = "linear-gradient(135deg, #ffe6f0, #fcd3e1)";
+      document.body.style.backgroundColor = "";
       rescueButton.style.display = "inline-block";
       abortButton.style.display = "none";
       helpButton.style.display = "none";
 
-      fetch("/api/send-safe", { method: "POST" }).catch(() => {});
+      fetch("/api/send-safe", { method: "POST" }).catch(() => { });
 
       if (recorder && recorder.state === "recording") {
         recorder.stop();
@@ -232,10 +303,11 @@
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: "Help button manually triggered due to high volume." })
-      }).catch(() => {});
+      }).catch(() => { });
       helpButton.innerText = "Help Sent!";
       helpButton.disabled = true;
     });
   </script>
 </body>
+
 </html>

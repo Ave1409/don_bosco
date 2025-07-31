@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - Petals</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f8e8ff 0%, #e0eafc 100%);
+      background-attachment: fixed;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      /* Subtle pattern overlay */
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      background-image: url('https://wallpaper-house.com/data/out/10/wallpaper2you_418311.jpg');
+      opacity: 0.13;
+      z-index: 0;
+    }
+
+    .dashboard-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 24px;
+      background-color: rgba(255, 240, 246, 0.95);
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    .complaint-card {
+      background-color: #fff0f6;
+      border: 1px solid #ffd6e7;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    .complaint-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .complaint-header img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #d63384;
+    }
+
+    .complaint-info h3 {
+      margin: 0;
+      color: #d63384;
+    }
+
+    .complaint-info p {
+      margin: 4px 0;
+      font-size: 15px;
+      color: #444;
+    }
+
+    .complaint-body {
+      margin-top: 20px;
+    }
+
+    .complaint-body p {
+      font-size: 16px;
+    }
+
+    .map-container {
+      height: 250px;
+      margin-top: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid #d63384;
+    }
+
+    @media (max-width: 700px) {
+      .complaint-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .admin-header {
+      width: 100vw;
+      padding: 48px 0 32px 0;
+      background: rgba(30, 0, 60, 0.12);
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(80,0,80,0.10);
+      border-bottom: 2px solid #b39ddb;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .admin-haze {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.35);
+      backdrop-filter: blur(12px);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .admin-header h1 {
+      font-size: 3.5rem;
+      font-family: 'Segoe UI', sans-serif;
+      color: #4a148c;
+      letter-spacing: 6px;
+      font-weight: 900;
+      text-shadow: 0 4px 24px #fff, 0 2px 8px #b39ddb;
+      margin: 0;
+      text-transform: uppercase;
+      filter: drop-shadow(0 2px 12px #b39ddb);
+      animation: adminTitleFadeIn 1.2s cubic-bezier(.4,2,.6,1);
+      position: relative;
+      z-index: 1;
+    }
+    @keyframes adminTitleFadeIn {
+      from { opacity: 0; transform: translateY(-40px); }
+      to { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- No navbar for admin dashboard -->
+
+  <header class="admin-header">
+    <div class="admin-haze"></div>
+    <h1>ADMIN PAGE</h1>
+  </header>
+  <!-- Placeholder for your admin background image: -->
+  <!-- Replace the URL below with your preferred admin background image -->
+  <style>
+    body {
+      /* To set your own admin background image, replace the URL below: */
+      background-image: url('https://wallpaper-house.com/data/out/10/wallpaper2you_418311.jpg');
+      /* ...existing background styles... */
+    }
+  </style>
+  <div class="dashboard-container">
+    <h2 style="color:#d63384; text-align:center;">Live Complaints Feed</h2>
+
+    <!-- Complaint 1 -->
+    <div class="complaint-card">
+      <div class="complaint-header">
+        <img src="profile-pic.jpg" alt="User Photo" />
+        <div class="complaint-info">
+          <div class="user-info" 
+               data-user-id="PRIYA_SHARMA" 
+               data-email="priyasharma@email.com" 
+               data-phone="+91 9876543210" 
+               data-address="South Kolkata, India">
+            <h3 class="user-name">Priya Sharma</h3>
+            <ul class="user-details">
+              <li><strong>Email:</strong> <span class="user-email">priyasharma@email.com</span></li>
+              <li><strong>Phone:</strong> <span class="user-phone">+91 9876543210</span></li>
+              <li><strong>Address:</strong> <span class="user-address">South Kolkata, India</span></li>
+              <li><strong>Govt ID:</strong> <span class="user-govt-id">PRIYA SHARMA</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="complaint-body">
+        <!-- Complaint line removed as requested -->
+        <p><strong>Emergency Press Count:</strong> 3 | <strong>Last Used:</strong> 5 minutes ago</p>
+        <div id="map1" class="map-container"></div>
+      </div>
+    </div>
+
+    <!-- You can dynamically add more .complaint-card divs from backend -->
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Mock location map setup for Complaint 1 (Dumdum, Kolkata)
+    const map1 = L.map('map1').setView([22.6154, 88.4232], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map1);
+    L.marker([22.6154, 88.4232]).addTo(map1)
+      .bindPopup('User Live Location')
+      .openPopup();
+  </script>
+</body>
+</html>
