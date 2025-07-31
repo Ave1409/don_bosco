@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Petals</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ffe6f0, #fcd3e1);
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 32px;
+      background-color: #fff0f6;
+      border-bottom: 1px solid #ffd6e7;
+      background-image: url('https://www.transparenttextures.com/patterns/flowers.png');
+    }
+    .logo-title {
+      display: flex;
+      align-items: center;
+    }
+    .logo-title img {
+      width: 50px;
+      height: 50px;
+      margin-right: 12px;
+    }
+    .logo-title span {
+      font-size: 28px;
+      font-weight: bold;
+      color: #d63384;
+    }
+    .nav-links a {
+      margin-left: 24px;
+      text-decoration: none;
+      font-size: 22px;
+      color: #d63384;
+      font-weight: bold;
+    }
+    .nav-links a:hover {
+      color: #ad1457;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: 60px auto;
+      padding: 40px;
+      background-color: #fff0f6;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+    h2 {
+      text-align: center;
+      font-size: 32px;
+      color: #d63384;
+      margin-bottom: 30px;
+    }
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 14px 16px;
+      margin: 18px 0;
+      border: 1px solid #ffd6e7;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #d63384;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 24px;
+    }
+    button:hover {
+      background-color: #ad1457;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo-title">
+      <img src="logo.png" alt="Logo" />
+      <span>Petals</span>
+    </div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/register.html">Register</a>
+      <a href="/login.html">Login</a>
+      <a href="/dashboard.html">Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="form-container">
+    <h2>Login</h2>
+    <form action="/api/login" method="POST">
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="email" name="email" placeholder="Gmail" required />
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</body>
+</html>
