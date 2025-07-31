@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Petals</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ffe6f0, #fcd3e1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 28px;
+            background-color: #fff0f6;
+            border-bottom: 1px solid #ffd6e7;
+            background-image: url('https://www.transparenttextures.com/patterns/flowers.png');
+        }
+
+        .logo-title {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-title img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo-title span {
+            font-size: 24px;
+            font-weight: bold;
+            color: #d63384;
+        }
+
+        .nav-links a {
+            margin-left: 20px;
+            text-decoration: none;
+            font-size: 20px;
+            color: #d63384;
+            font-weight: bold;
+        }
+
+        .nav-links a:hover {
+            color: #ad1457;
+        }
+
+        .form-container {
+            max-width: 520px;
+            min-width: 300px;
+            width: 50vw;
+            margin: 40px auto;
+            padding: 32px 24px;
+            background-color: #fff0f6;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+            min-height: 40vh;
+        }
+
+        h2 {
+            text-align: center;
+            color: #d63384;
+            font-size: 2rem;
+            margin-bottom: 24px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 14px 10px;
+            margin: 14px 0;
+            border: 1.2px solid #ffd6e7;
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #d63384;
+            color: white;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #ad1457;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo-title"> <img src="logo.png" alt="Logo" /> <span>Petals</span> </div>
+        <div class="nav-links"> <a href="/">Home</a> <a href="/register.html">Register</a> <a
+                href="/login.html">Login</a> <a href="/dashboard.html">Dashboard</a> </div>
+    </nav>
+    <div class="form-container">
+        <h2>Register</h2>
+        <form action="/api/register" method="POST"> <input type="text" name="username" placeholder="Full Name"
+                required /> <input type="email" name="email" placeholder="Gmail" required /> <input type="tel"
+                name="phone" placeholder="Phone Number" required /> <input type="text" name="address"
+                placeholder="Address" required /> <button type="submit">Register</button> </form>
+    </div>
+</body>
+
+</html>
