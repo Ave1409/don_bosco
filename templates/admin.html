@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard - Petal Safe</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ecf0f1 40%, #e4b1c2 110%);
+      margin: 0;
+      padding-bottom: 40px;
+      color: #24292f;
+    }
+    nav {
+      background: #fff0f6;
+      border-bottom: 1px solid #ffd6e7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 30px;
+      background-image: url('https://www.transparenttextures.com/patterns/flowers.png');
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+    }
+    .brand img {
+      height: 36px;
+      margin-right: 10px;
+    }
+    .brand span {
+      font-size: 22px;
+      color: #d63384;
+      font-weight: bold;
+    }
+    .main-container {
+      max-width: 640px;
+      margin: 32px auto;
+      background: #fff8fa;
+      padding: 32px 40px 24px 40px;
+      border-radius: 17px;
+      box-shadow: 0 8px 24px rgba(214, 51, 132, 0.11);
+    }
+    h2 {
+      color: #d63384;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .status-bar {
+      margin-bottom: 16px;
+      padding: 11px 0;
+      background: #ffe1ee;
+      border-radius: 10px;
+      font-size: 16px;
+      text-align: center;
+      color: #ad1457;
+      font-weight: 500;
+    }
+    #userListContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 13px;
+      margin-bottom: 25px;
+      justify-content: center;
+    }
+    .user-btn {
+      padding: 8px 18px;
+      font-size: 16px;
+      border-radius: 7px;
+      border: none;
+      background: #ffeefd;
+      color: #d63384;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.17s;
+      max-width: 100%;
+      word-break: break-word;
+    }
+    .user-btn.selected,
+    .user-btn:hover {
+      background: #d63384;
+      color: #fff;
+    }
+    audio {
+      margin: 15px auto 0 auto;
+      display: block;
+      width: 95%;
+      outline: none;
+      border-radius: 5px;
+      background: #fffdfb;
+      box-shadow: 0 2px 6px rgba(214, 51, 132, 0.2);
+    }
+    #locationArea {
+      font-size: 15px;
+      margin-top: 16px;
+      text-align: center;
+      color: #592742;
+    }
+    #gmapsLink {
+      margin-left: 8px;
+      font-weight: 600;
+      color: #ad1457;
+      text-decoration: none;
+    }
+    #gmapsLink:hover {
+      text-decoration: underline;
+    }
+    #log {
+      margin-top: 28px;
+      background: #fff2f9;
+      padding: 13px 15px;
+      border-radius: 10px;
+      font-size: 15px;
+      height: 120px;
+      overflow-y: auto;
+      box-shadow: 0 2px 7px rgba(214, 51, 132, 0.1);
+      border: 1px solid #ffd6e7;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="brand">
+      <img src="logo.png" alt="Petal Safe Logo" />
+      <span>Petal Safe Admin</span>
+    </div>
+  </nav>
+
+  <div class="main-container">
+    <h2>Admin Dashboard</h2>
+
+    <div id="status" class="status-bar">Connecting to server...</div>
+
+    <div><strong>Active Users:</strong></div>
+    <div id="userListContainer">Loading users...</div>
+
+    <audio id="liveAudio" controls autoplay></audio>
+
+    <div id="locationArea">
+      <strong>User Location:</strong>
+      <span id="locationText">No location received yet.</span>
+      <a id="gmapsLink" href="#" target="_blank" style="display:none;">View on Google Maps</a>
+    </div>
+
+    <div id="log"></div>
+  </div>
+
+  <!-- Socket.IO -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+  <script>
+    // --- Config ---
+    const SOCKET_URL = 'http://localhost:5000'; // Change if needed
+
+    // --- DOM Elements ---
+    const statusBar = document.getElementById('status');
+    const logArea = document.getElementById('log');
+    const userListDiv = document.getElementById('userListContainer');
+    const audioElement = document.getElementById('liveAudio');
+    const locationText = document.getElementById('locationText');
+    const gmapsLink = document.getElementById('gmapsLink');
+
+    // --- State variables ---
+    let socket = null;
+    let currentUserId = null;
+    let listeningUserId = null;
+    let mediaSource = null;
+    let sourceBuffer = null;
+    let audioChunkQueue = []; // Queue for chunks arriving before sourceBuffer is ready
+
+    // --- Utility functions ---
+    function log(msg) {
+      logArea.textContent += msg + '\n';
+      logArea.scrollTop = logArea.scrollHeight;
+    }
+
+    function setStatus(msg, color) {
+      statusBar.textContent = msg;
+      statusBar.style.background = color || "#ffe1ee";
+    }
+
+    // --- Socket.IO connection ---
+    socket = io(SOCKET_URL);
+
+    socket.on('connect', () => {
+      setStatus("Connected to server.", "#e0ffd6");
+      log(`Connected with socket id: ${socket.id}`);
+      socket.emit('connect_admin');
+      fetchAndRenderUserList();
+    });
+
+    socket.on('disconnect', () => {
+      setStatus("Disconnected from server.", "#ffe1ee");
+      log("Socket disconnected.");
+      userListDiv.textContent = "Disconnected from server.";
+      resetLocationDisplay();
+      resetAudioPlayback();
+    });
+
+    socket.on('error', (err) => {
+      setStatus("Socket error!", "#ffdde0");
+      log("Socket.IO error: " + JSON.stringify(err));
+    });
+
+    // --- Receive admin listen confirmation ---
+    socket.on('listen_confirm', data => {
+      log(`Listening to room: ${data.room}`);
+      setStatus(`Listening to user: ${currentUserId || 'Unknown'}`);
+    });
+
+    // --- Receive and queue audio chunks ---
+    socket.on('audio_chunk', data => {
+      if (!data || !data.chunk || listeningUserId !== data.user_id) return;
+
+      // Decode base64 string to ArrayBuffer
+      const byteString = atob(data.chunk);
+      const arrayBuffer = new ArrayBuffer(byteString.length);
+      const uint8Array = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < byteString.length; i++) {
+        uint8Array[i] = byteString.charCodeAt(i);
+      }
+
+      // If sourceBuffer is ready and not busy, append. Otherwise, queue it.
+      if (sourceBuffer && !sourceBuffer.updating) {
+        try {
+          sourceBuffer.appendBuffer(arrayBuffer);
+        } catch (e) {
+          log(`Error appending buffer: ${e.message}`);
+        }
+      } else {
+        audioChunkQueue.push(arrayBuffer);
+      }
+      log(`[${new Date().toLocaleTimeString()}] Received audio chunk (${(arrayBuffer.byteLength / 1024).toFixed(1)} KB)`);
+    });
+
+    // Setup MediaSource for seamless playback
+    function setupMediaSource(user_id) {
+      if (!window.MediaSource) {
+        alert('MediaSource API is not supported in this browser. Live audio will not work.');
+        return;
+      }
+      resetAudioPlayback(); // Clean up any previous stream
+
+      mediaSource = new MediaSource();
+      audioElement.src = URL.createObjectURL(mediaSource);
+      listeningUserId = user_id;
+
+      mediaSource.addEventListener('sourceopen', () => {
+        log(`MediaSource opened for user ${user_id}.`);
+        const mimeCodec = 'audio/webm; codecs=opus'; // Matches client-side recorder
+        if (!MediaSource.isTypeSupported(mimeCodec)) {
+          return log(`Error: MIME type ${mimeCodec} not supported.`);
+        }
+        sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+        sourceBuffer.addEventListener('updateend', () => {
+          if (audioChunkQueue.length > 0 && !sourceBuffer.updating) {
+            // Use a try-catch block as a safeguard. If the buffer has been
+            // removed (e.g., when switching users), this will throw an error.
+            // Catching it prevents the script from crashing and allows the new
+            // stream to proceed smoothly.
+            try {
+              sourceBuffer.appendBuffer(audioChunkQueue.shift());
+            } catch (e) {
+              log(`Could not append to a stale buffer. This is expected when switching users. Error: ${e.name}`);
+            }
+          }
+        });
+        audioElement.play().catch(e => log("Autoplay failed. Admin may need to click play."));
+      });
+    }
+
+    // Reset audio playback when switching users or disconnecting
+    function resetAudioPlayback() {
+      if (mediaSource && mediaSource.readyState === 'open') {
+        try { mediaSource.endOfStream(); } catch (e) { log("Error ending stream: " + e.message); }
+      }
+      if (audioElement.src) {
+        URL.revokeObjectURL(audioElement.src);
+      }
+      audioElement.pause();
+      audioElement.removeAttribute('src');
+      mediaSource = null;
+      sourceBuffer = null;
+      audioChunkQueue = [];
+      listeningUserId = null;
+    }
+
+    // --- Receive live location update ---
+    socket.on('user_location_update', data => {
+      if (!data || !data.user_id || data.user_id !== listeningUserId) return;
+      locationText.textContent = `${data.lat.toFixed(5)}, ${data.lon.toFixed(5)}`;
+      gmapsLink.style.display = '';
+      gmapsLink.href = `https://maps.google.com/?q=${data.lat},${data.lon}`;
+    });
+
+    function resetLocationDisplay() {
+      locationText.textContent = "No location received yet.";
+      gmapsLink.style.display = "none";
+      gmapsLink.href = "#";
+    }
+
+    // --- Fetch active users from backend API ---
+    async function fetchActiveUsers() {
+      try {
+        const resp = await fetch('/api/active-users');
+        if (!resp.ok) {
+          log(`Failed to fetch active users: ${resp.status}`);
+          return [];
+        }
+        return await resp.json();
+      } catch (e) {
+        log("Error fetching active users: " + e);
+        return [];
+      }
+    }
+
+    // --- Render user buttons ---
+    async function fetchAndRenderUserList() {
+      const users = await fetchActiveUsers();
+      userListDiv.innerHTML = '';
+      if (users.length === 0) {
+        userListDiv.textContent = "No active users.";
+        return;
+      }
+
+      users.forEach(userObj => {
+        const btn = document.createElement('button');
+        btn.className = 'user-btn';
+        btn.textContent = userObj.user_id;
+        if (userObj.user_id === currentUserId) {
+          btn.classList.add('selected');
+        }
+        btn.onclick = () => listenToUser(userObj.user_id, btn);
+        userListDiv.appendChild(btn);
+      });
+    }
+
+    // --- Listen to selected user ---
+    function listenToUser(user_id, clickedBtn) {
+      if (user_id === currentUserId) return; // Already listening
+
+      // Reset audio and location for new user
+      resetAudioPlayback();
+      resetLocationDisplay();
+
+      socket.emit('request_listen', { user_id });
+      setStatus(`Requesting to listen to user: ${user_id}`);
+      log(`Requesting to listen to user: ${user_id}`);
+
+      // UI highlight button
+      document.querySelectorAll('.user-btn').forEach(b => b.classList.remove('selected'));
+      clickedBtn.classList.add('selected');
+
+      currentUserId = user_id;
+      setupMediaSource(user_id);
+    }
+
+    // --- Auto-refresh user list every 8 seconds ---
+    setInterval(fetchAndRenderUserList, 8000);
+    // Initial load
+    fetchAndRenderUserList();
+
+    // --- Initial setup ---
+    setStatus("Connecting...");
+
+  </script>
+</body>
+</html>
