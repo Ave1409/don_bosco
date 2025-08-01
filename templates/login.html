@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - Petals</title>
   <style>
-    body {
+   body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background-image: url('https://media.istockphoto.com/id/1382596550/vector/abstract-art-pink-floral-background-hand-draw-outline-flowers-magnolia-sketch-with-leaves.jpg?s=612x612&w=0&k=20&c=d4TLUvB16PCF1afgwPsDhcZFKtuZ3VAFKkvzpNchP5c=');
@@ -14,16 +14,38 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
       background-position: center;
+      min-height: 100vh;
+      /* Subtle fade-in */
+      animation: fadeInBody 1.2s cubic-bezier(.4, 2, .6, 1);
+    }
+
+    @keyframes fadeInBody {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 32px;
-      background-color: #fff0f6;
+      padding: 16px 28px;
+      background: rgba(255, 240, 246, 0.85);
       border-bottom: 1px solid #ffd6e7;
       background-image: url('https://www.transparenttextures.com/patterns/flowers.png');
+      box-shadow: 0 8px 32px rgba(214, 51, 132, 0.08);
+      backdrop-filter: blur(8px);
+      border-radius: 0 0 24px 24px;
+      transition: background 0.4s, box-shadow 0.4s;
+    }
+
+    nav:hover {
+      background: rgba(255, 240, 246, 0.95);
+      box-shadow: 0 12px 40px rgba(214, 51, 132, 0.13);
     }
 
     .logo-title {
@@ -32,15 +54,28 @@
     }
 
     .logo-title img {
-      width: 50px;
-      height: 50px;
-      margin-right: 12px;
+      width: 48px;
+      height: 48px;
+      margin-right: 14px;
+      filter: drop-shadow(0 2px 8px #ffd6e7);
+      transition: transform 0.3s;
+    }
+
+    .logo-title img:hover {
+      transform: scale(1.12) rotate(-8deg);
     }
 
     .logo-title span {
       font-size: 28px;
       font-weight: bold;
       color: #d63384;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 8px #ffd6e7;
+      transition: color 0.3s;
+    }
+
+    .logo-title span:hover {
+      color: #ad1457;
     }
 
     .nav-links a {
@@ -49,10 +84,15 @@
       font-size: 22px;
       color: #d63384;
       font-weight: bold;
+      padding: 8px 18px;
+      border-radius: 8px;
+      transition: background 0.3s, color 0.3s, box-shadow 0.3s;
     }
 
     .nav-links a:hover {
-      color: #ad1457;
+      color: #fff;
+      background: linear-gradient(90deg, #ffb6d5 0%, #d63384 100%);
+      box-shadow: 0 2px 12px #ffd6e7;
     }
 
     .form-container {
@@ -118,34 +158,35 @@
 </head>
 
 <body>
-  <nav>
-    <div class="logo-title">
-      <img src="logo.png" alt="Logo" />
-      <span>Petals</span>
-    </div>
-    <div class="nav-links">
-      <a href="/">Home</a>
-      <a href="/register.html">Register</a>
-      <a href="/login.html">Login</a>
-      <a href="/dashboard.html">Dashboard</a>
-    </div>
-  </nav>
+    <nav>
+        <div class="logo-title">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
+            <span>Petals</span>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="{{ url_for('register') }}">Register</a>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        </div>
+    </nav>
 
-  <div class="form-container">
-    <h2>Login</h2>
-    <form action="/api/login" method="POST">
-      <input type="text" name="username" placeholder="Username" required />
-      <input type="email" name="email" placeholder="Gmail" required />
-      <button type="submit">Login</button>
-    </form>
+    <div class="form-container">
+        <h2>Login</h2>
+        <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Username" required />
+            <input type="email" name="email" placeholder="Gmail" required />
+            <button type="submit">Login</button>
+        </form>
 
-    <!-- Google Login Button -->
-    <div class="google-login">
-      <a href="/auth/google">
-        <img src="google.jpg" alt="Login with Google" />
-      </a>
+        <!-- Google Login Button -->
+        <div class="google-login">
+            <a href="/login/google">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" alt="Google logo">
+            </a>
+        </div>
     </div>
-  </div>
 </body>
-
 </html>
+
+

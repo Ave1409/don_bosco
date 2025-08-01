@@ -1,166 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>User Dashboard - Petals</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-image: url('https://media.istockphoto.com/id/1382596550/vector/abstract-art-pink-floral-background-hand-draw-outline-flowers-magnolia-sketch-with-leaves.jpg?s=612x612&w=0&k=20&c=d4TLUvB16PCF1afgwPsDhcZFKtuZ3VAFKkvzpNchP5c=');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard - Petals</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-image: url('https://media.istockphoto.com/id/1382596550/vector/abstract-art-pink-floral-background-hand-draw-outline-flowers-magnolia-sketch-with-leaves.jpg?s=612x612&w=0&k=20&c=d4TLUvB16PCF1afgwPsDhcZFKtuZ3VAFKkvzpNchP5c=');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+            /* Subtle fade-in */
+            animation: fadeInBody 1.2s cubic-bezier(.4, 2, .6, 1);
+        }
 
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 32px;
-      background-color: rgba(255, 240, 246, 0.85);
-      border-bottom: 1px solid #ffd6e7;
-      background-image: url('https://www.transparenttextures.com/patterns/flowers.png');
-    }
+        @keyframes fadeInBody {
+            from {
+                opacity: 0;
+            }
 
-    .logo-title {
-      display: flex;
-      align-items: center;
-    }
+            to {
+                opacity: 1;
+            }
+        }
 
-    .logo-title img {
-      width: 50px;
-      height: 50px;
-      margin-right: 12px;
-    }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 28px;
+            background: rgba(255, 240, 246, 0.85);
+            border-bottom: 1px solid #ffd6e7;
+            background-image: url('https://www.transparenttextures.com/patterns/flowers.png');
+            box-shadow: 0 8px 32px rgba(214, 51, 132, 0.08);
+            backdrop-filter: blur(8px);
+            border-radius: 0 0 24px 24px;
+            transition: background 0.4s, box-shadow 0.4s;
+        }
 
-    .logo-title span {
-      font-size: 28px;
-      font-weight: bold;
-      color: #d63384;
-    }
+        nav:hover {
+            background: rgba(255, 240, 246, 0.95);
+            box-shadow: 0 12px 40px rgba(214, 51, 132, 0.13);
+        }
 
-    .nav-links a {
-      margin-left: 24px;
-      text-decoration: none;
-      font-size: 22px;
-      color: #d63384;
-      font-weight: bold;
-    }
+        .logo-title {
+            display: flex;
+            align-items: center;
+        }
 
-    .nav-links a:hover {
-      color: #ad1457;
-    }
+        .logo-title img {
+            width: 48px;
+            height: 48px;
+            margin-right: 14px;
+            filter: drop-shadow(0 2px 8px #ffd6e7);
+            transition: transform 0.3s;
+        }
 
-    .dashboard-container {
-      max-width: 900px;
-      margin: 60px auto;
-      padding: 40px;
-      background-color: rgba(255, 240, 246, 0.95);
-      border-radius: 16px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-    }
+        .logo-title img:hover {
+            transform: scale(1.12) rotate(-8deg);
+        }
 
-    .profile-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+        .logo-title span {
+            font-size: 28px;
+            font-weight: bold;
+            color: #d63384;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px #ffd6e7;
+            transition: color 0.3s;
+        }
 
-    .profile-header img {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid #d63384;
-    }
+        .logo-title span:hover {
+            color: #ad1457;
+        }
 
-    .profile-header h2 {
-      margin: 16px 0 8px;
-      font-size: 28px;
-      color: #d63384;
-    }
+        .nav-links a {
+            margin-left: 24px;
+            text-decoration: none;
+            font-size: 22px;
+            color: #d63384;
+            font-weight: bold;
+            padding: 8px 18px;
+            border-radius: 8px;
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+        }
 
-    .profile-header p {
-      font-size: 18px;
-      color: #5f1b41;
-    }
+        .nav-links a:hover {
+            color: #fff;
+            background: linear-gradient(90deg, #ffb6d5 0%, #d63384 100%);
+            box-shadow: 0 2px 12px #ffd6e7;
+        }
 
-    .user-details {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-top: 30px;
-    }
+        .dashboard-container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 40px;
+            background-color: rgba(255, 240, 246, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
 
-    .detail-card {
-      background-color: #fff0f6;
-      border: 1px solid #ffd6e7;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-    .detail-card h4 {
-      margin-bottom: 10px;
-      color: #d63384;
-    }
+        .profile-header img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #d63384;
+        }
 
-    .detail-card p {
-      font-size: 16px;
-      color: #333;
-    }
+        .profile-header h2 {
+            margin: 16px 0 8px;
+            font-size: 28px;
+            color: #d63384;
+        }
 
-    @media (max-width: 700px) {
-      .user-details {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+        .profile-header p {
+            font-size: 18px;
+            color: #5f1b41;
+        }
+
+        .user-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        .detail-card {
+            background-color: #fff0f6;
+            border: 1px solid #ffd6e7;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .detail-card h4 {
+            margin-bottom: 10px;
+            color: #d63384;
+        }
+
+        .detail-card p {
+            font-size: 16px;
+            color: #333;
+        }
+
+        @media (max-width: 700px) {
+            .user-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <nav>
-    <div class="logo-title">
-      <img src="logo.png" alt="Logo" />
-      <span>Petals</span>
-    </div>
-    <div class="nav-links">
-      <a href="/">Home</a>
-      <a href="/register.html">Register</a>
-      <a href="/login.html">Login</a>
-      <a href="/dashboard.html">Dashboard</a>
-    </div>
-  </nav>
+    <nav>
+        <div class="logo-title">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
+            <span>Petals</span>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="{{ url_for('register') }}">Register</a>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        </div>
+    </nav>
 
-  <div class="dashboard-container">
-    <div class="profile-header">
-      <img src="profile-pic.jpg" alt="User Photo" />
-      <div class="user-info"
-           data-user-id="PRIYA_SHARMA"
-           data-email="priyasharma@email.com"
-           data-phone="+91 9876543210"
-           data-address="123 Pink Orchid Avenue, South Kolkata, WB, India"
-           data-dob="2000-03-10"
-           data-gender="Female"
-           data-account-created="2024-01-15"
-           data-last-login="2025-07-30T20:15:00"
-           data-emergency-press-count="3">
-        <h2 class="user-name">Priya Sharma</h2>
-        <p class="user-email">priyasharma@email.com</p>
-      </div>
-    </div>
+    <div class="dashboard-container">
+        <div class="profile-header">
+            <img src="{{ url_for('static', filename='profile-pic.jpg') }}" alt="User Photo" />
+            <div class="user-info" data-user-id="{{ user.govt_id }}" data-email="{{ user.email }}"
+                data-phone="{{ user.phone }}" data-address="{{ user.address }}" data-dob="{{ user.dob }}"
+                data-gender="{{ user.gender }}" data-account-created="{{ user.account_created }}"
+                data-last-login="{{ user.last_login }}" data-emergency-press-count="{{ user.emergency_press_count }}">
+                <h2 class="user-name">{{ user.username }}</h2>
+                <p class="user-email">{{ user.email }}</p>
+            </div>
+        </div>
 
-    <div class="user-details">
-      <div class="detail-card"><h4>Phone Number</h4><p class="user-phone">+91 9876543210</p></div>
-      <div class="detail-card"><h4>Government Registered Name</h4><p class="user-govt-id">PRIYA SHARMA</p></div>
-      <div class="detail-card"><h4>Address</h4><p class="user-address">123 Pink Orchid Avenue, South Kolkata, WB, India</p></div>
-      <div class="detail-card"><h4>Last Login</h4><p class="user-last-login">July 30, 2025 at 8:15 PM</p></div>
-      <div class="detail-card"><h4>Emergency Button Pressed</h4><p class="user-emergency-press-count">3 times</p></div>
-      <div class="detail-card"><h4>Account Created</h4><p class="user-account-created">January 15, 2024</p></div>
-      <div class="detail-card"><h4>Date of Birth</h4><p class="user-dob">March 10, 2000</p></div>
-      <div class="detail-card"><h4>Gender</h4><p class="user-gender">Female</p></div>
+        <div class="user-details">
+            <div class="detail-card">
+                <h4>Phone Number</h4>
+                <p class="user-phone">{{ user.phone }}</p>
+            </div>
+            <div class="detail-card">
+                <h4>Government Registered Name</h4>
+                <p class="user-govt-id">{{ user.govt_id }}</p>
+            </div>
+            <div class="detail-card">
+                <h4>Address</h4>
+                <p class="user-address">{{ user.address }}</p>
+            </div>
+            <div class="detail-card">
+                <h4>Last Login</h4>
+                <p class="user-last-login">{{ user.last_login }}</p>
+            </div>
+            <div class="detail-card">
+                <h4>Emergency Button Pressed</h4>
+                <p class="user-emergency-press-count">{{ user.emergency_press_count }} times</p>
+            </div>
+            <div class="detail-card">
+                <h4>Account Created</h4>
+                <p class="user-account-created">{{ user.account_created }}</p>
+            </div>
+            <div class="detail-card">
+                <h4>Date of Birth</h4>
+                <p class="user-dob">{{ user.dob }}</p>
+            </div>
+            <div class="detail-card">
+                <h4>Gender</h4>
+                <p class="user-gender">{{ user.gender }}</p>
+            </div>
+        </div>
     </div>
-  </div>
 </body>
+
 </html>

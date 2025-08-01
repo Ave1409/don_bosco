@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register - Petals</title>
+    <title>Complete Profile - Petals</title>
     <style>
         body {
             margin: 0;
@@ -115,7 +115,6 @@
         }
 
         input[type="text"],
-        input[type="email"],
         input[type="tel"],
         input[type="date"],
         select {
@@ -143,50 +142,19 @@
         button:hover {
             background-color: #ad1457;
         }
-
-        .google-btn {
-            background-color: #ffffff;
-            color: #444;
-            border: 1.5px solid #d63384;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .google-btn img {
-            width: 20px;
-            height: 20px;
-        }
-
-        .divider {
-            text-align: center;
-            margin: 20px 0;
-            font-weight: bold;
-            color: #d63384;
-        }
     </style>
 </head>
 
 <body>
     <nav>
-        <div class="logo-title">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
-            <span>Petals</span>
-        </div>
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="{{ url_for('register') }}">Register</a>
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('dashboard') }}">Dashboard</a>
-        </div>
+        <div class="logo-title"> <img src="/static/logo.jpg" alt="Logo" /> <span>Petals</span> </div>
+        <div class="nav-links"> <a href="/">Home</a> <a href="/register">Register</a> <a href="/login">Login</a> <a
+                href="/user-dashboard">Dashboard</a> </div>
     </nav>
 
     <div class="form-container">
-        <h2>Register</h2>
-        <form action="/register" method="POST">
-            <input type="text" name="username" placeholder="Full Legal Name" required />
-            <input type="email" name="email" placeholder="Gmail" required />
+        <h2>Complete Your Profile</h2>
+        <form action="/complete-profile" method="POST">
             <input type="tel" name="phone" placeholder="Phone Number" required />
             <input type="text" name="address" placeholder="Address" required />
             <input type="date" name="dob" placeholder="Date of Birth" required />
@@ -198,16 +166,7 @@
                 <option value="Other">Other</option>
             </select>
 
-            <button type="submit">Register</button>
-        </form>
-
-        <div class="divider">or</div>
-
-        <form action="/login/google" method="GET">
-            <button class="google-btn" type="submit">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" alt="Google logo">
-                Sign up with Google
-            </button>
+            <button type="submit">Submit Profile</button>
         </form>
     </div>
 </body>

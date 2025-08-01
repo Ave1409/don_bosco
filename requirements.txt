@@ -1,0 +1,5 @@
+flask
+flask-login
+pymongo
+flask_socketio
+authlib.integrations.flask_client
