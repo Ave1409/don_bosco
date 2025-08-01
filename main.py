@@ -149,6 +149,9 @@ user_id = str(uuid.uuid4())
 def home():
     return render_template('index.html', user_id=user_id)
 
+#register
+#Object_ID =
+
 @socketio.on('panic')
 def handle_panic_event(data):
     user_id = data.get('user_id')
